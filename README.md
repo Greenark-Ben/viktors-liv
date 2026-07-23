@@ -1,17 +1,36 @@
 # Viktors liv
 
-A calm life-planning companion for families.
+> Viktors liv hjälper familjer att förstå, planera och dela en människas liv – inte administrera en diagnos.
 
 ## Product principle
 
 > Every screen should leave a parent calmer than when they opened it.
 
-## Product direction
+## Release 0.2 — Foundation
 
-Viktors liv helps families understand today, prepare for what comes next, and keep everything important together.
+The application now runs on React, TypeScript and Vite. It contains the seven permanent workspaces:
 
-The person comes before the diagnosis, the case, the document, or the authority.
+- Idag
+- Lär känna Viktor
+- Resan
+- Kunskap
+- Människor
+- Dokument
+- Ekonomi
 
-## Current development
+Person Workspace remains functional with automatic browser persistence. The other workspaces are established as calm, navigable product surfaces ready for their next increments.
 
-The first production increment is **Person Workspace — Lär känna Viktor**.
+## Development
+
+```bash
+npm install
+npm run dev
+```
+
+## Production build
+
+```bash
+npm run build
+```
+
+GitHub Pages builds and deploys the generated `dist` directory whenever `main` changes.
