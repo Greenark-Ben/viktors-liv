@@ -46,7 +46,6 @@ function DailyStoryPanel() {
   const [energy,setEnergy]=useState<Energy>('Normal');
   const author=readAuthor();
   const latest=useMemo(()=>[...stories].sort((a,b)=>b.createdAt.localeCompare(a.createdAt)).slice(0,3),[stories]);
-  useEffect(()=>localStorage.setItem(storageKey,JSON.stringify(stories)),[stories]);
 
   const save=(event:FormEvent<HTMLFormElement>)=>{
     event.preventDefault();
@@ -56,7 +55,12 @@ function DailyStoryPanel() {
     const remember=String(data.get('remember')||'').trim();
     if(!story && !remember) return;
     const entry:DailyStory={id:crypto.randomUUID(),date:todayIso(),createdAt:new Date().toISOString(),author,mood,story,joys,difficulties,energy,remember};
-    setStories(current=>[entry,...current]);
+    setStories(current=>{
+      const next=[entry,...current];
+      localStorage.setItem(storageKey,JSON.stringify(next));
+      window.queueMicrotask(()=>window.dispatchEvent(new Event('liv:daily-stories-changed')));
+      return next;
+    });
     form.reset(); setMood('🙂'); setJoys([]); setDifficulties([]); setEnergy('Normal'); setSaved(true);
     window.setTimeout(()=>setSaved(false),2200);
   };
@@ -81,14 +85,31 @@ function DailyStoryPanel() {
 const host=document.getElementById('daily-story-root');
 if(host){
   ReactDOM.createRoot(host).render(<React.StrictMode><DailyStoryPanel/></React.StrictMode>);
+  let focusRequested=false;
+  let scheduled=false;
   const place=()=>{
-    const main=document.querySelector('.shell main');
-    const title=main?.querySelector('.header h1')?.textContent;
-    if(main && title==='Idag'){
-      if(host.parentElement!==main) main.appendChild(host);
+    scheduled=false;
+    const isToday=(document.body.dataset.workspace||'today')==='today';
+    const main=document.querySelector<HTMLElement>('.shell main');
+    if(isToday&&main){
+      if(host.parentElement!==main)main.appendChild(host);
       host.hidden=false;
-    } else host.hidden=true;
+      if(focusRequested){
+        focusRequested=false;
+        requestAnimationFrame(()=>{
+          host.scrollIntoView({behavior:'smooth',block:'start'});
+          host.querySelector<HTMLTextAreaElement>('textarea[name="story"]')?.focus();
+        });
+      }
+    }else host.hidden=true;
   };
-  new MutationObserver(place).observe(document.body,{childList:true,subtree:true});
-  place();
+  const schedulePlace=()=>{if(scheduled)return;scheduled=true;requestAnimationFrame(place)};
+  window.addEventListener('liv:navigate',event=>{
+    const detail=(event as CustomEvent<{workspace?:string;focus?:string}>).detail;
+    if(detail?.workspace==='today'&&detail.focus==='daily-story')focusRequested=true;
+    schedulePlace();
+  });
+  window.addEventListener('pageshow',schedulePlace);
+  new MutationObserver(schedulePlace).observe(document.body,{attributes:true,attributeFilter:['data-workspace'],childList:true,subtree:true});
+  schedulePlace();
 }
