@@ -11,7 +11,9 @@ function WorkspaceArchitecture(){
     const shell=document.querySelector('.shell');
     const nav=shell?.querySelector('aside nav');
     const main=shell?.querySelector('main') as HTMLElement|null;
-    if(!shell||!nav||!main)return;
+    const host=document.getElementById('workspace-architecture-root');
+    if(!shell||!nav||!main||!host)return;
+    if(host.parentElement!==shell)shell.appendChild(host);
 
     const existingButtons=Array.from(nav.querySelectorAll('button'));
     const personButton=existingButtons.find(button=>button.textContent?.includes('Viktor'));
