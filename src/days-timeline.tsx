@@ -27,7 +27,7 @@ export function DaysTimeline(){
  useEffect(()=>{if(!selected&&filtered.length)setSelected(filtered[0]);if(selected&&!filtered.some(item=>item.id===selected.id))setSelected(filtered[0]||null)},[filtered,selected]);
  const totalMoments=stories.reduce((sum,item)=>sum+momentsFor(item).length,0);
  const people=new Set(stories.map(item=>item.author).filter(Boolean)).size;
- const createDay=()=>Array.from(document.querySelectorAll<HTMLButtonElement>('.shell aside > nav:not(.renaissance-nav) button')).find(button=>button.textContent?.includes('Idag'))?.click();
+ const createDay=()=>window.dispatchEvent(new CustomEvent('liv:navigate',{detail:{workspace:'today',focus:'daily-story'}}));
  const remove=(id:string)=>{const next=stories.filter(item=>item.id!==id);localStorage.setItem(storageKey,JSON.stringify(next));window.dispatchEvent(new Event('liv:daily-stories-changed'));setStories(next);setSelected(null)};
  const selectedMoments=selected?momentsFor(selected):[];
  return <main className="life-v2">
