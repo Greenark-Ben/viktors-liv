@@ -2,6 +2,7 @@ import React,{useEffect,useMemo,useState} from 'react';
 import ReactDOM from 'react-dom/client';
 import {createPortal} from 'react-dom';
 import './workspace-architecture.css';
+import './workspace-shell-polish.css';
 
 type Workspace='today'|'person'|'life'|'learning'|'journey'|'knowledge'|'people'|'documents'|'economy';
 
@@ -28,6 +29,7 @@ function findShell(){
 
 function WorkspaceArchitecture(){
   const [active,setActive]=useState<Workspace>('today');
+  const [shell,setShell]=useState<HTMLElement|null>(null);
   const [aside,setAside]=useState<HTMLElement|null>(null);
 
   useEffect(()=>{
@@ -35,8 +37,9 @@ function WorkspaceArchitecture(){
     const connect=()=>{
       const current=findShell();
       if(current.shell&&current.aside){
+        current.shell.classList.add('renaissance-shell','liv-shell-v2');
+        setShell(current.shell);
         setAside(current.aside);
-        current.shell.classList.add('renaissance-shell');
         return;
       }
       frame=requestAnimationFrame(connect);
@@ -67,8 +70,7 @@ function WorkspaceArchitecture(){
       {navigation.map(item=><button key={item.id} type="button" className={active===item.id?'active':''} aria-current={active===item.id?'page':undefined} onClick={()=>select(item)}><span>{item.icon}</span>{item.label}</button>)}
     </nav>,aside):null,[active,aside]);
 
-  return <>
-    {navPortal}
+  const workspacePortal=useMemo(()=>shell?createPortal(
     <div className={`renaissance-workspaces ${active==='life'||active==='learning'?'is-open':''}`}>
       <section className="renaissance-workspace life-workspace" hidden={active!=='life'} aria-label="Livet">
         <header className="renaissance-header"><div><p>WORKSPACE · 02</p><h1>Livet</h1><span>Vad har hänt i Viktors vardag?</span></div><strong>Familjens berättelser</strong></header>
@@ -80,8 +82,9 @@ function WorkspaceArchitecture(){
         <div className="renaissance-statement learning"><p>FÖRSTÅELSE · UNDERLAG · ÖDMJUKHET</p><h2>Små mönster. Alltid med underlag.</h2><span>Liv uppmärksammar återkommande samband. Familjen avgör vad som faktiskt stämmer för Viktor.</span></div>
         <div id="learning-workspace-content"/>
       </section>
-    </div>
-  </>;
+    </div>,shell):null,[active,shell]);
+
+  return <>{navPortal}{workspacePortal}</>;
 }
 
 const host=document.getElementById('workspace-architecture-root');
