@@ -1,4 +1,4 @@
-import React, { FormEvent, useEffect, useMemo, useState } from 'react';
+import React, { FormEvent, useMemo, useState } from 'react';
 import ReactDOM from 'react-dom/client';
 import './daily-story.css';
 
@@ -87,29 +87,38 @@ if(host){
   ReactDOM.createRoot(host).render(<React.StrictMode><DailyStoryPanel/></React.StrictMode>);
   let focusRequested=false;
   let scheduled=false;
+
+  const park=()=>{
+    if(host.parentElement!==document.body)document.body.appendChild(host);
+    host.hidden=true;
+    host.setAttribute('aria-hidden','true');
+  };
+
   const place=()=>{
     scheduled=false;
     const isToday=(document.body.dataset.workspace||'today')==='today';
+    if(!isToday){park();return}
     const main=document.querySelector<HTMLElement>('.shell main');
-    if(isToday&&main){
-      if(host.parentElement!==main)main.appendChild(host);
-      host.hidden=false;
-      if(focusRequested){
-        focusRequested=false;
-        requestAnimationFrame(()=>{
-          host.scrollIntoView({behavior:'smooth',block:'start'});
-          host.querySelector<HTMLTextAreaElement>('textarea[name="story"]')?.focus();
-        });
-      }
-    }else host.hidden=true;
+    if(!main){schedulePlace();return}
+    if(host.parentElement!==main)main.appendChild(host);
+    host.hidden=false;
+    host.removeAttribute('aria-hidden');
+    if(focusRequested){
+      focusRequested=false;
+      requestAnimationFrame(()=>{
+        host.scrollIntoView({behavior:'smooth',block:'start'});
+        host.querySelector<HTMLTextAreaElement>('textarea[name="story"]')?.focus();
+      });
+    }
   };
   const schedulePlace=()=>{if(scheduled)return;scheduled=true;requestAnimationFrame(place)};
   window.addEventListener('liv:navigate',event=>{
     const detail=(event as CustomEvent<{workspace?:string;focus?:string}>).detail;
     if(detail?.workspace==='today'&&detail.focus==='daily-story')focusRequested=true;
+    if(detail?.workspace&&detail.workspace!=='today')park();
     schedulePlace();
   });
   window.addEventListener('pageshow',schedulePlace);
-  new MutationObserver(schedulePlace).observe(document.body,{attributes:true,attributeFilter:['data-workspace'],childList:true,subtree:true});
+  new MutationObserver(schedulePlace).observe(document.body,{attributes:true,attributeFilter:['data-workspace']});
   schedulePlace();
 }
