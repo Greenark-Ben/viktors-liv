@@ -1,5 +1,6 @@
 import React,{useEffect,useMemo,useState} from 'react';
 import './days-timeline.css';
+import './life-v2-shell.css';
 
 type Mood='🙂'|'😐'|'☹️';
 type Energy='Låg'|'Normal'|'Hög';
