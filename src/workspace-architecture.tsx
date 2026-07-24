@@ -10,14 +10,14 @@ type NavigationItem={id:Workspace;icon:string;label:string;legacyLabel?:string};
 
 const navigation:NavigationItem[]=[
   {id:'today',icon:'⌂',label:'Idag',legacyLabel:'Idag'},
-  {id:'person',icon:'♥',label:'Viktor',legacyLabel:'Viktor'},
+  {id:'person',icon:'♡',label:'Viktor',legacyLabel:'Viktor'},
   {id:'life',icon:'▥',label:'Livet'},
   {id:'learning',icon:'✦',label:'Det vi har lärt oss'},
   {id:'journey',icon:'◷',label:'Resan',legacyLabel:'Resan'},
   {id:'knowledge',icon:'▤',label:'Kunskap',legacyLabel:'Kunskap'},
-  {id:'people',icon:'◉',label:'Människor',legacyLabel:'Människor'},
+  {id:'people',icon:'♙',label:'Människor',legacyLabel:'Människor'},
   {id:'documents',icon:'▱',label:'Dokument',legacyLabel:'Dokument'},
-  {id:'economy',icon:'○',label:'Ekonomi',legacyLabel:'Ekonomi'}
+  {id:'economy',icon:'⊙',label:'Ekonomi',legacyLabel:'Ekonomi'}
 ];
 
 function findShell(){
@@ -65,10 +65,21 @@ function WorkspaceArchitecture(){
     button?.click();
   };
 
-  const navPortal=useMemo(()=>aside?createPortal(
-    <nav className="renaissance-nav" aria-label="Huvudnavigation">
-      {navigation.map(item=><button key={item.id} type="button" className={active===item.id?'active':''} aria-current={active===item.id?'page':undefined} onClick={()=>select(item)}><span>{item.icon}</span>{item.label}</button>)}
-    </nav>,aside):null,[active,aside]);
+  const sidebarPortal=useMemo(()=>aside?createPortal(
+    <div className="liv-sidebar-inner">
+      <header className="liv-sidebar-brand">
+        <strong>liv</strong>
+        <p>Familjen äger informationen.</p>
+      </header>
+      <nav className="renaissance-nav" aria-label="Huvudnavigation">
+        {navigation.map(item=><button key={item.id} type="button" className={active===item.id?'active':''} aria-current={active===item.id?'page':undefined} onClick={()=>select(item)}><span aria-hidden="true">{item.icon}</span><b>{item.label}</b></button>)}
+      </nav>
+      <footer className="liv-sidebar-user">
+        <span className="liv-user-avatar">B</span>
+        <span className="liv-user-copy"><strong>Ben</strong><small>Administratör</small></span>
+        <span className="liv-user-chevron">⌄</span>
+      </footer>
+    </div>,aside):null,[active,aside]);
 
   const workspacePortal=useMemo(()=>shell?createPortal(
     <div className={`renaissance-workspaces ${active==='life'||active==='learning'?'is-open':''}`}>
@@ -84,7 +95,7 @@ function WorkspaceArchitecture(){
       </section>
     </div>,shell):null,[active,shell]);
 
-  return <>{navPortal}{workspacePortal}</>;
+  return <>{sidebarPortal}{workspacePortal}</>;
 }
 
 const host=document.getElementById('workspace-architecture-root');
