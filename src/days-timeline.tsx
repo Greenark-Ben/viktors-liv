@@ -1,42 +1,34 @@
-import React,{useEffect,useMemo,useState} from 'react';
+import React,{useMemo,useState} from 'react';
 import './days-timeline.css';
-import './life-v2-shell.css';
 
-type Mood='🙂'|'😐'|'☹️';
-type Energy='Låg'|'Normal'|'Hög';
-type DailyStory={id:string;date:string;createdAt:string;author:string;mood:Mood;story:string;joys:string[];difficulties:string[];energy:Energy;remember:string};
-
-type Moment={icon:string;title:string;description:string;tag:string;kind:'joy'|'hard'|'story'};
-
-const storageKey='liv.daily-stories.v1';
-function readStories():DailyStory[]{try{return JSON.parse(localStorage.getItem(storageKey)||'[]')}catch{return []}}
-function formatDate(value:string,withWeekday=true){return new Intl.DateTimeFormat('sv-SE',withWeekday?{weekday:'long',day:'numeric',month:'long',year:'numeric'}:{day:'numeric',month:'long',year:'numeric'}).format(new Date(`${value}T12:00:00`))}
-function dayLabel(value:string){const today=new Date().toISOString().slice(0,10);return value===today?`Idag – ${formatDate(value,false)}`:formatDate(value,false)}
-function moodLabel(mood:Mood){return mood==='🙂'?'Glad':mood==='😐'?'Lugn':'Tung'}
-function momentsFor(story:DailyStory):Moment[]{
- const joys=story.joys.map(tag=>({icon:tag.toLowerCase().includes('musik')?'♫':'♡',title:tag,description:`${tag} gjorde dagen bra för Viktor.`,tag,kind:'joy' as const}));
- const hard=story.difficulties.map(tag=>({icon:'○',title:tag,description:`${tag} var svårt eller krävde extra stöd.`,tag,kind:'hard' as const}));
- const narrative=story.story.trim()? [{icon:'✦',title:'Dagens berättelse',description:story.story,tag:'Berättelse',kind:'story' as const}]:[];
- return [...joys,...hard,...narrative];
+type Kind='Dag'|'Bild'|'Möte'|'Beslut'|'Dokument'|'Livshändelse';
+type TimelineItem={id:string;date:string;kind:Kind;title:string;summary:string;source:string;image?:string;detail?:string};
+type Photo={id:string;dataUrl:string;caption:string;date:string;profile:boolean};
+const read=<T,>(key:string,fallback:T):T=>{try{return JSON.parse(localStorage.getItem(key)||'null')||fallback}catch{return fallback}};
+const normalise=(value?:string)=>{if(!value)return'';if(/^\d{4}$/.test(value))return`${value}-01-01`;return value.slice(0,10)};
+const label=(date:string)=>new Intl.DateTimeFormat('sv-SE',{day:'numeric',month:'long',year:'numeric'}).format(new Date(`${date}T12:00:00`));
+const monthLabel=(date:string)=>new Intl.DateTimeFormat('sv-SE',{month:'long',year:'numeric'}).format(new Date(`${date}T12:00:00`));
+function buildTimeline():TimelineItem[]{
+ const days=read<any[]>('liv.daily-stories.v1',[]).map(x=>({id:`day-${x.id}`,date:normalise(x.date||x.createdAt),kind:'Dag' as const,title:x.remember||'En dag i Viktors liv',summary:x.story||[...(x.joys||[]),...(x.difficulties||[])].join(' · '),source:'Livet',detail:`Känsla ${x.mood||'—'} · Energi ${x.energy||'—'} · ${x.author||'Familjen'}`}));
+ const photos=read<Photo[]>('viktors-liv.viktor-photos.v1',[]).map(x=>({id:`photo-${x.id}`,date:normalise(x.date),kind:'Bild' as const,title:x.caption||'Bild av Viktor',summary:x.profile?'Vald profilbild':'Sparad i Viktors bildgalleri',source:'Viktor',image:x.dataUrl}));
+ const meetings=read<any[]>('liv.meetings.v1',[]).map(x=>({id:`meeting-${x.id}`,date:normalise(x.date||x.meetingDate||x.createdAt),kind:'Möte' as const,title:x.title||x.purpose||'Möte',summary:x.notes||x.purpose||'Familjens mötesunderlag',source:'Handling',detail:[x.participants,x.questions].filter(Boolean).join(' · ')}));
+ const decisions=read<any[]>('liv.decisions.v1',[]).map(x=>({id:`decision-${x.id}`,date:normalise(x.date||x.decisionDate||x.createdAt),kind:'Beslut' as const,title:x.question||'Beslut',summary:x.decision||x.reasoning||'Familjens beslut',source:'Handling',detail:x.reasoning}));
+ const documents=read<any[]>('viktors-liv.documents.v1',[]).map(x=>({id:`document-${x.id}`,date:normalise(x.date),kind:'Dokument' as const,title:x.title||'Dokument',summary:x.meaning||x.impact||'Dokument sparat av familjen',source:'Dokument',detail:[x.issuer,x.next].filter(Boolean).join(' · ')}));
+ const journey=read<any[]>('viktors-liv.journey.v1',[]).map(x=>({id:`journey-${x.id}`,date:normalise(x.date||x.year),kind:'Livshändelse' as const,title:x.title||'Livshändelse',summary:x.story||'',source:'Resan'}));
+ return [...days,...photos,...meetings,...decisions,...documents,...journey].filter(x=>x.date).sort((a,b)=>b.date.localeCompare(a.date));
 }
-
 export function DaysTimeline(){
- const [stories,setStories]=useState<DailyStory[]>(readStories),[query,setQuery]=useState(''),[mood,setMood]=useState<'Alla'|Mood>('Alla'),[energy,setEnergy]=useState<'Alla'|Energy>('Alla'),[selected,setSelected]=useState<DailyStory|null>(null);
- useEffect(()=>{const sync=()=>setStories(readStories());window.addEventListener('storage',sync);window.addEventListener('liv:daily-stories-changed',sync as EventListener);return()=>{window.removeEventListener('storage',sync);window.removeEventListener('liv:daily-stories-changed',sync as EventListener)}},[]);
- const filtered=useMemo(()=>[...stories].sort((a,b)=>b.createdAt.localeCompare(a.createdAt)).filter(item=>{const haystack=[item.story,item.remember,item.author,...item.joys,...item.difficulties].join(' ').toLowerCase();return(!query||haystack.includes(query.toLowerCase()))&&(mood==='Alla'||item.mood===mood)&&(energy==='Alla'||item.energy===energy)}),[stories,query,mood,energy]);
- useEffect(()=>{if(!selected&&filtered.length)setSelected(filtered[0]);if(selected&&!filtered.some(item=>item.id===selected.id))setSelected(filtered[0]||null)},[filtered,selected]);
- const totalMoments=stories.reduce((sum,item)=>sum+momentsFor(item).length,0);
- const people=new Set(stories.map(item=>item.author).filter(Boolean)).size;
- const createDay=()=>window.dispatchEvent(new CustomEvent('liv:navigate',{detail:{workspace:'today',focus:'daily-story'}}));
- const remove=(id:string)=>{const next=stories.filter(item=>item.id!==id);localStorage.setItem(storageKey,JSON.stringify(next));window.dispatchEvent(new Event('liv:daily-stories-changed'));setStories(next);setSelected(null)};
- const selectedMoments=selected?momentsFor(selected):[];
- return <main className="life-v2">
-   <header className="life-v2-header"><div><p>WORKSPACE · 02</p><h1>Livet</h1><span>Dagar, stunder och saker som betyder något i Viktors liv.</span></div><div className="life-header-actions"><button className="life-view-button">▣ Visa som tidslinje</button><button className="life-icon-button" aria-label="Byt vy">▦</button></div></header>
-   <section className="life-toolbar"><div className="life-search">⌕<input value={query} onChange={event=>setQuery(event.target.value)} placeholder="Sök i dagar, minnen, aktiviteter…"/></div><select value={energy} onChange={event=>setEnergy(event.target.value as 'Alla'|Energy)}><option value="Alla">Alla energinivåer</option><option>Låg</option><option>Normal</option><option>Hög</option></select><select value={mood} onChange={event=>setMood(event.target.value as 'Alla'|Mood)}><option value="Alla">Alla känslor</option><option value="🙂">Glad</option><option value="😐">Lugn</option><option value="☹️">Tung</option></select><button className="life-create" onClick={createDay}>Skapa ny dag <b>＋</b></button></section>
-   <section className="life-stats"><article><i>▣</i><div><strong>{stories.length}</strong><b>Dagar</b><span>Totalt dokumenterade</span></div></article><article><i>♡</i><div><strong>{totalMoments}</strong><b>Stunder</b><span>Betydelsefulla ögonblick</span></div></article><article><i>⌂</i><div><strong>{stories.length?1:0}</strong><b>Platser</b><span>Dokumenterade miljöer</span></div></article><article><i>♙</i><div><strong>{people}</strong><b>Människor</b><span>Personer som berättat</span></div></article></section>
-   <section className="life-browser">
-    <aside className="life-day-column"><header><h2>Dagar</h2><select><option>Senaste först</option></select></header><div className="life-day-list">{filtered.length===0?<div className="life-empty">Inga dagar matchar filtreringen.</div>:filtered.map(item=>{const moments=momentsFor(item);return <button key={item.id} className={selected?.id===item.id?'selected':''} onClick={()=>setSelected(item)}><span className={`life-mood mood-${item.mood==='🙂'?'good':item.mood==='😐'?'calm':'hard'}`}>{item.mood}</span><div><strong>{dayLabel(item.date)}</strong><small>{item.remember||item.author||'Viktors dag'}</small></div><em>{moments.length} stunder</em></button>})}</div></aside>
-    <section className="life-detail">{selected?<><header className="life-detail-header"><span className={`life-mood mood-${selected.mood==='🙂'?'good':selected.mood==='😐'?'calm':'hard'}`}>{selected.mood}</span><div><h2>{dayLabel(selected.date)}</h2><p>{selected.author} · {formatDate(selected.date)}</p></div><button aria-label="Fler val">⋮</button></header><div className="life-detail-body"><h3>Dagens stunder</h3>{selectedMoments.length?<div className="life-moments">{selectedMoments.map((moment,index)=><article key={`${moment.title}-${index}`}><time>{String(9+index*2).padStart(2,'0')}:{index%2?'30':'15'}</time><i className={moment.kind}>{moment.icon}</i><div><strong>{moment.title}</strong><p>{moment.description}</p></div><span className={moment.kind}>{moment.tag}</span></article>)}</div>:<div className="life-empty moments">Inga enskilda stunder dokumenterades den här dagen.</div>}<div className="life-detail-footer"><article><h3>Dagens känsla</h3><div><span className={`life-mood mood-${selected.mood==='🙂'?'good':selected.mood==='😐'?'calm':'hard'}`}>{selected.mood}</span><div><strong>{moodLabel(selected.mood)}</strong><p>Energi: {selected.energy}</p></div></div></article><article><h3>Anteckning</h3><p>{selected.remember||selected.story||'Ingen särskild anteckning sparades.'}</p></article></div><button className="life-delete" onClick={()=>remove(selected.id)}>Ta bort den här dagen</button></div></>:<div className="life-placeholder"><span>♡</span><h2>Den första dagen väntar.</h2><p>När familjen sparar en berättelse på Idag får den en plats här.</p><button onClick={createDay}>Skapa ny dag</button></div>}</section>
-   </section>
-  </main>;
+ const [query,setQuery]=useState(''),[kind,setKind]=useState<'Alla'|Kind>('Alla'),[period,setPeriod]=useState(''),[selected,setSelected]=useState<TimelineItem|null>(null);
+ const all=useMemo(buildTimeline,[]),profile=read<any>('viktors-liv.person.v2',{}),photos=read<Photo[]>('viktors-liv.viktor-photos.v1',[]),profilePhoto=photos.find(x=>x.profile)||photos[0];
+ const filtered=useMemo(()=>all.filter(x=>{const text=[x.title,x.summary,x.source,x.detail,x.kind].join(' ').toLowerCase();return(!query||text.includes(query.toLowerCase()))&&(kind==='Alla'||x.kind===kind)&&(!period||x.date.startsWith(period))}),[all,query,kind,period]);
+ const grouped=useMemo(()=>filtered.reduce<Record<string,TimelineItem[]>>((acc,item)=>{const key=monthLabel(item.date);(acc[key]||=[]).push(item);return acc},{}),[filtered]);
+ const active=selected&&filtered.some(x=>x.id===selected.id)?selected:filtered[0]||null;
+ const counts=all.reduce<Record<string,number>>((acc,x)=>{acc[x.kind]=(acc[x.kind]||0)+1;return acc},{});
+ return <main className="timeline-intelligence">
+  <section className="timeline-hero"><div><p>LIVET · TIDSLINJEINTELLIGENS</p><h2>Ett liv. Inte separata register.</h2><span>Alla sparade dagar, bilder, möten, beslut, dokument och livshändelser läses från sina ursprungliga källor och ordnas i tid.</span></div><div className="tell-viktor">{profilePhoto?<img src={profilePhoto.dataUrl} alt={profilePhoto.caption||'Viktor'}/>:<b>V</b>}<div><small>BERÄTTA OM VIKTOR</small><h3>Det här är Viktor.</h3><p>{profile.about||'Familjens berättelse om Viktor växer här över tid.'}</p></div></div></section>
+  <section className="replay-bar"><div><small>LIFE REPLAY</small><strong>Visa mig en tid i Viktors liv</strong></div><input type="month" value={period} onChange={e=>setPeriod(e.target.value)}/>{period&&<button onClick={()=>setPeriod('')}>Visa hela livet</button>}</section>
+  <section className="timeline-controls"><input value={query} onChange={e=>setQuery(e.target.value)} placeholder="Sök efter människor, beslut, minnen eller händelser…"/><select value={kind} onChange={e=>setKind(e.target.value as 'Alla'|Kind)}><option>Alla</option>{(['Dag','Bild','Möte','Beslut','Dokument','Livshändelse'] as Kind[]).map(x=><option key={x}>{x}</option>)}</select></section>
+  <section className="timeline-counts">{(['Dag','Bild','Möte','Beslut','Dokument','Livshändelse'] as Kind[]).map(x=><article key={x}><strong>{counts[x]||0}</strong><span>{x}</span></article>)}</section>
+  <section className="timeline-layout"><div className="timeline-stream">{Object.keys(grouped).length?Object.entries(grouped).map(([month,items])=><section key={month}><header><span>{month}</span><i>{items.length} händelser</i></header>{items.map(item=><button key={item.id} className={active?.id===item.id?'active':''} onClick={()=>setSelected(item)}>{item.image?<img src={item.image} alt=""/>:<b>{item.kind.slice(0,1)}</b>}<div><small>{label(item.date)} · {item.kind}</small><h3>{item.title}</h3><p>{item.summary}</p></div><em>{item.source}</em></button>)}</section>):<div className="timeline-empty"><h3>Ingen tid matchar ännu.</h3><p>Ändra period eller filter för att se andra delar av Viktors liv.</p></div>}</div><aside className="timeline-detail">{active?<><small>{active.kind} · {label(active.date)}</small>{active.image&&<img src={active.image} alt={active.title}/>}<h2>{active.title}</h2><p>{active.summary}</p>{active.detail&&<blockquote>{active.detail}</blockquote>}<footer><span>Källa</span><strong>{active.source}</strong><p>Detta är en tidsprojektion. Underlaget förblir ägt av sin ursprungliga workspace.</p></footer></>:<div><h2>Välj en händelse</h2><p>Här visas sammanhanget utan att ändra originalinformationen.</p></div>}</aside></section>
+ </main>;
 }
