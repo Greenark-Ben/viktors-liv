@@ -1,4 +1,5 @@
-import React,{useMemo} from 'react';
+import React,{useMemo,useState} from 'react';
+import {PeopleStudio} from './people-studio';
 import './studio-shell.css';
 
 type Destination='people'|'relations'|'documents'|'knowledge'|'journey'|'person'|'economy';
@@ -8,8 +9,9 @@ function count(key:string){try{const value=JSON.parse(localStorage.getItem(key)|
 function profileReady(){try{const value=JSON.parse(localStorage.getItem('viktors-liv.person.v2')||'{}');return Boolean(value?.name||value?.biography||value?.about)}catch{return false}}
 
 export function StudioDashboard({navigate}:Props){
+ const[workspace,setWorkspace]=useState<'dashboard'|'people'>('dashboard');
  const cards=useMemo(()=>[
-  {id:'people' as const,n:'01',title:'Människor',count:count('viktors-liv.people.v1'),unit:'personer',copy:'Relationer, roller och vad varje person behöver förstå.',state:'Arbetsyta redo'},
+  {id:'people' as const,n:'01',title:'Människor',count:count('viktors-liv.people.v1'),unit:'personer',copy:'Relationer, ansvar och vad varje person behöver förstå.',state:'People Studio'},
   {id:'relations' as const,n:'02',title:'Relationer',count:count('liv.relationships.v1'),unit:'kopplingar',copy:'Gör sammanhanget mellan människor, beslut och händelser tydligt.',state:'Arbetsyta redo'},
   {id:'documents' as const,n:'03',title:'Dokument',count:count('viktors-liv.documents.v1'),unit:'underlag',copy:'Förvandla dokument till innebörd, påverkan och nästa handling.',state:'Arbetsyta redo'},
   {id:'knowledge' as const,n:'04',title:'Kunskap',count:count('viktors-liv.knowledge.v1'),unit:'förklaringar',copy:'Bevara vad familjen vet och vad det betyder för Viktor.',state:'Arbetsyta redo'},
@@ -17,11 +19,13 @@ export function StudioDashboard({navigate}:Props){
   {id:'person' as const,n:'06',title:'Viktors profil',count:profileReady()?1:0,unit:profileReady()?'profil':'profil saknas',copy:'Vem Viktor är, vad som skapar glädje och vad som ger trygghet.',state:profileReady()?'Grund finns':'Behöver innehåll'},
   {id:'economy' as const,n:'07',title:'Ekonomi',count:0,unit:'privat domän',copy:'Familjens ekonomiska överblick hålls separerad från delade erfarenheter.',state:'Skyddad'}
  ],[]);
+ if(workspace==='people')return <div><button className="studio-back" onClick={()=>setWorkspace('dashboard')}>← Till Studioöversikten</button><PeopleStudio/></div>;
  const ready=cards.filter(card=>card.count>0||card.id==='economy').length;
+ const open=(destination:Destination)=>destination==='people'?setWorkspace('people'):navigate(destination);
  return <main className="studio-page">
   <header className="studio-hero"><div><p>LIV RENAISSANCE · STUDIO</p><h1>God morgon, Ben.</h1><span>Här bygger och underhåller familjen den förståelse som LIV använder.</span></div><aside><strong>{ready}/{cards.length}</strong><span>områden påbörjade</span></aside></header>
   <section className="studio-statement"><p>FAMILJENS ARBETSPLATS</p><h2>Bygg förståelsen här.<br/>Lev med den i LIV.</h2><span>Studio förändrar aldrig vem Viktor är. Det hjälper familjen att bevara, förbättra och förklara det ni redan vet.</span></section>
   <section className="studio-status"><article><b>{count('viktors-liv.documents.v1')}</b><span>Dokument med sammanhang</span></article><article><b>{count('viktors-liv.people.v1')}</b><span>Människor runt Viktor</span></article><article><b>{count('liv.relationships.v1')}</b><span>Förklarade relationer</span></article><article><b>{count('viktors-liv.journey.v1')}</b><span>Bevarade livshändelser</span></article></section>
-  <section className="studio-workspaces"><header><div><p>01</p><h2>Arbetsytor</h2></div><span>En källa. Tydliga ansvar.</span></header><div className="studio-grid">{cards.map(card=><button key={card.id} onClick={()=>navigate(card.id)}><small>{card.n}</small><div><h3>{card.title}</h3><p>{card.copy}</p></div><aside><strong>{card.count}</strong><span>{card.unit}</span><em>{card.state}</em></aside><b>→</b></button>)}</div></section>
+  <section className="studio-workspaces"><header><div><p>01</p><h2>Arbetsytor</h2></div><span>En källa. Tydliga ansvar.</span></header><div className="studio-grid">{cards.map(card=><button key={card.id} onClick={()=>open(card.id)}><small>{card.n}</small><div><h3>{card.title}</h3><p>{card.copy}</p></div><aside><strong>{card.count}</strong><span>{card.unit}</span><em>{card.state}</em></aside><b>→</b></button>)}</div></section>
  </main>
 }
