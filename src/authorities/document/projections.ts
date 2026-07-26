@@ -1,0 +1,11 @@
+import type{DocumentAuthorityRecord}from'./contracts';
+
+export interface DocumentDashboardProjection{id:string;title:string;issuer:string;state:DocumentAuthorityRecord['state'];meaning:string;nextAction?:string;evidenceCount:number;updatedAt:string}
+export interface DocumentTimelineProjection{id:string;date:string;title:string;summary:string;meaning:string;personIds:string[];evidenceCount:number}
+export interface DocumentActionProjection{documentId:string;documentTitle:string;actionId:string;title:string;kind:string;ownerPersonId?:string;dueDate?:string;completed:boolean}
+export interface DocumentPortraitEvidenceProjection{documentId:string;title:string;claim:string;reason:string;accepted:boolean}
+
+export function projectDocumentDashboard(record:DocumentAuthorityRecord):DocumentDashboardProjection{return{id:record.id,title:record.identity.title,issuer:record.identity.issuer,state:record.state,meaning:record.understanding?.whyItMatters||'Förståelse behöver fortfarande författas.',nextAction:record.actions.find(action=>!action.completedAt)?.title,evidenceCount:record.evidence.length,updatedAt:record.updatedAt}}
+export function projectDocumentTimeline(record:DocumentAuthorityRecord):DocumentTimelineProjection|null{if(!record.understanding)return null;return{id:record.id,date:record.identity.effectiveDate||record.identity.issuedDate||record.createdAt.slice(0,10),title:record.identity.title,summary:record.understanding.plainLanguage,meaning:record.understanding.whyItMatters,personIds:[...new Set([...(record.impact?.affectedPersonIds||[]),...record.connections.personIds])],evidenceCount:record.evidence.length}}
+export function projectDocumentActions(record:DocumentAuthorityRecord):DocumentActionProjection[]{return record.actions.map(action=>({documentId:record.id,documentTitle:record.identity.title,actionId:action.id,title:action.title,kind:action.kind,ownerPersonId:action.ownerPersonId,dueDate:action.dueDate,completed:Boolean(action.completedAt)}))}
+export function projectDocumentPortraitEvidence(record:DocumentAuthorityRecord):DocumentPortraitEvidenceProjection|null{if(!record.understanding)return null;return{documentId:record.id,title:record.identity.title,claim:record.understanding.whatChanged||record.understanding.plainLanguage,reason:record.understanding.whyItMatters,accepted:record.state==='accepted'}}
