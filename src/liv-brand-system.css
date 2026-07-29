@@ -1,0 +1,47 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@400;500;600&display=swap');
+
+:root{
+ --liv-forest:#244237;
+ --liv-sage:#a6b59a;
+ --liv-taupe:#bdae9a;
+ --liv-cream:#f7f5f0;
+ --liv-charcoal:#1f2428;
+ --liv-white:#fffdf9;
+ --liv-line:rgba(36,66,55,.16);
+ --liv-shadow:0 18px 45px rgba(31,36,40,.08);
+ --green:var(--liv-forest);
+ --cyan:var(--liv-sage);
+ --warm:var(--liv-cream);
+ --divider:var(--liv-line);
+ --charcoal:var(--liv-charcoal);
+ --muted:#6d706b;
+ --white:var(--liv-white);
+ --side:#f1eee7;
+}
+
+html{background:var(--liv-cream);color-scheme:light}
+body{background:radial-gradient(circle at 15% 0,rgba(189,174,154,.12),transparent 34%),var(--liv-cream);color:var(--liv-charcoal);font-family:Inter,system-ui,sans-serif;font-feature-settings:'kern' 1,'liga' 1}
+h1,h2,.brand,.u-header h1,.u-statement h2,.studio-hero h1,.studio-statement h2,.resource-head h1,.resource-statement h2,.knowledge-studio h1,.knowledge-studio h2{font-family:'Cormorant Garamond',Georgia,serif!important;font-weight:500!important;letter-spacing:-.025em!important}
+button,input,textarea,select{border-radius:10px}
+button{transition:transform .16s ease,box-shadow .16s ease,background-color .16s ease,border-color .16s ease}
+button:hover{transform:translateY(-1px)}
+button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible{outline:3px solid rgba(166,181,154,.52);outline-offset:2px}
+
+aside{background:linear-gradient(180deg,#f6f2ea,#eeebe3);border-color:var(--liv-line)}
+.brand{position:relative;min-height:48px;margin-bottom:24px;padding:0 0 0 54px;display:flex;align-items:center;color:var(--liv-forest);font-size:0!important;letter-spacing:0!important}
+.brand:before{content:'';position:absolute;left:0;width:44px;height:44px;background:url('/liv-mark.svg') center/contain no-repeat}
+.brand:after{content:'LIV';font:500 29px 'Cormorant Garamond',serif;letter-spacing:.12em}
+nav button.active{border-left-color:var(--liv-sage);background:rgba(255,253,249,.85);color:var(--liv-forest);box-shadow:0 8px 24px rgba(31,36,40,.05)}
+.header,.u-header{background:rgba(247,245,240,.9)!important;border-color:var(--liv-line)!important;backdrop-filter:blur(18px)}
+
+.hero,.statement,.today-hero,.economy-hero,.u-statement.dark,.studio-statement,.resource-statement{background:linear-gradient(145deg,#18382f,var(--liv-forest) 62%,#315346)!important;color:var(--liv-cream)!important;border-radius:24px!important;box-shadow:var(--liv-shadow);overflow:hidden;position:relative}
+.hero:after,.statement:after,.today-hero:after,.economy-hero:after,.u-statement.dark:after,.studio-statement:after,.resource-statement:after{content:'';position:absolute;right:-56px;bottom:-76px;width:260px;height:260px;opacity:.13;background:url('/liv-leaf.svg') center/contain no-repeat;pointer-events:none}
+
+.card,.person-card,.knowledge-card,.document-card,.resource-card-list article,.knowledge-studio article,.studio-grid>button{border-color:var(--liv-line)!important;background:rgba(255,253,249,.82)!important;box-shadow:0 10px 32px rgba(31,36,40,.045);border-radius:18px!important}
+.primary,.u-primary,.resource-primary,.ps-primary{background:var(--liv-forest)!important;border-color:var(--liv-forest)!important;color:var(--liv-cream)!important;border-radius:999px!important;padding-inline:20px!important}
+.resource-secondary,.text-action{color:var(--liv-forest)!important}
+.eyebrow,.status,.u-header p,.studio-hero p,.resource-head p,.resource-statement p,.knowledge-studio header p{font-family:Inter,sans-serif!important;letter-spacing:.16em!important;text-transform:uppercase}
+blockquote{border-left-color:var(--liv-sage)!important;background:rgba(166,181,154,.12)!important}
+
+@media(max-width:950px){.brand{padding:0}.brand:after{display:none}.brand:before{left:50%;transform:translateX(-50%)}}
+@media(max-width:680px){body{background:var(--liv-cream)}.hero,.statement,.today-hero,.economy-hero,.u-statement.dark,.studio-statement,.resource-statement{border-radius:18px!important}}
