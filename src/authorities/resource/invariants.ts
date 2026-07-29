@@ -1,7 +1,7 @@
 import type{ResourcePackRecord,ResourceRecord}from'./contracts';
 
 export interface InvariantResult{valid:boolean;reasons:string[]}
-const duplicates=(values:string[])=>new Set(values).size!==values.length;
+const duplicates=<T>(values:T[])=>new Set(values).size!==values.length;
 
 export function validateResource(record:ResourceRecord):InvariantResult{
  const reasons:string[]=[];
