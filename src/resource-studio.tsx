@@ -10,7 +10,7 @@ export function ResourceStudio(){
  const[resources,setResources]=useState<ResourceRecord[]>([]);const[packs,setPacks]=useState(()=>createLocalResourcePackRepository().list());const[query,setQuery]=useState('');const[filter,setFilter]=useState<Filter>('all');const[showAdd,setShowAdd]=useState(false);
  const refresh=()=>{setResources(createLocalResourceRepository().list());setPacks(createLocalResourcePackRepository().list())};
  useEffect(()=>{refresh();const listener=()=>refresh();window.addEventListener('storage',listener);window.addEventListener('liv:resources-changed',listener);return()=>{window.removeEventListener('storage',listener);window.removeEventListener('liv:resources-changed',listener)}},[]);
- const visible=useMemo(()=>{const found=query.trim()?searchResources(resources,{query,limit:100}).map(result=>result.resource):resources;return filter==='all'||filter==='packs'?found:found.filter(resource=>resource.type===filter)},[resources,query,filter]);
+ const visible=useMemo(()=>{const found=query.trim()?searchResources(resources,{text:query,limit:100}).map(result=>result.resource):resources;return filter==='all'||filter==='packs'?found:found.filter(resource=>resource.type===filter)},[resources,query,filter]);
  const cards=visible.map(projectResourceCard);const packCards=packs.map(projectResourcePack);
  const categoryCounts=resources.reduce<Partial<Record<ResourceType,number>>>((sum,resource)=>({...sum,[resource.type]:(sum[resource.type]||0)+1}),{});
  return <main className="resource-studio u-page">
