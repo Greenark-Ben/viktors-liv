@@ -2,6 +2,8 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './public-site.css';
 
+const appHref = `${import.meta.env.BASE_URL}app.html`;
+
 const principles = [
   ['01', 'Människan först', 'LIV börjar med personen – aldrig med diagnosen, systemen eller dokumenten.'],
   ['02', 'Minnen som får leva', 'Små ögonblick, relationer och berättelser samlas till ett helt liv.'],
@@ -21,7 +23,7 @@ function App() {
           <a href="#varfor">Varför LIV</a>
           <a href="#sa-fungerar-det">Så fungerar det</a>
           <a href="#grundarfamiljer">LIV 100</a>
-          <a className="nav-cta" href="/app.html">Öppna LIV</a>
+          <a className="nav-cta" href={appHref}>Öppna LIV</a>
         </nav>
       </header>
 
@@ -36,7 +38,7 @@ function App() {
             </p>
             <div className="hero-actions">
               <a className="button button-primary" href="#grundarfamiljer">Bli en grundarfamilj</a>
-              <a className="button button-secondary" href="/app.html">Utforska LIV</a>
+              <a className="button button-secondary" href={appHref}>Utforska LIV</a>
             </div>
             <p className="free-note">LIV lanseras kostnadsfritt för familjer som vill använda och utveckla tjänsten tillsammans med oss.</p>
           </div>
@@ -123,7 +125,7 @@ function App() {
 
       <footer>
         <div><strong>LIV</strong><p>Ingen människas historia ska gå förlorad.</p></div>
-        <div className="footer-links"><a href="mailto:hej@livplattformen.se">Kontakt</a><a href="/app.html">Öppna LIV</a></div>
+        <div className="footer-links"><a href="mailto:hej@livplattformen.se">Kontakt</a><a href={appHref}>Öppna LIV</a></div>
         <p className="copyright">© 2026 LIV. Byggt med omsorg för människor och deras berättelser.</p>
       </footer>
     </div>
