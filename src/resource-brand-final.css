@@ -1,0 +1,228 @@
+/* Canonical Resource Studio layout.
+   Resource Studio mounts inside its own absolute host, so it needs an explicit
+   width and grid contract rather than inheriting generic workspace geometry. */
+
+.resource-studio-host{
+  position:absolute!important;
+  inset:0!important;
+  z-index:4!important;
+  overflow-x:hidden!important;
+  overflow-y:auto!important;
+  background:var(--liv-cream)!important;
+}
+
+.resource-studio{
+  width:100%!important;
+  max-width:none!important;
+  min-width:0!important;
+  margin:0!important;
+  padding:0 0 56px!important;
+  box-sizing:border-box!important;
+  background:transparent!important;
+}
+
+.resource-head{
+  margin:0!important;
+  padding:18px clamp(22px,3vw,38px) 24px!important;
+  align-items:center!important;
+  border:0!important;
+  border-bottom:1px solid rgba(189,174,154,.35)!important;
+  background:rgba(247,245,240,.78)!important;
+}
+.resource-head h1{
+  margin:.12em 0!important;
+  color:var(--liv-charcoal)!important;
+  font:500 clamp(42px,5vw,64px)/.98 'Cormorant Garamond',Georgia,serif!important;
+  letter-spacing:-.025em!important;
+}
+.resource-head p{color:#4f8ea1!important}
+.resource-head span{color:var(--muted)!important;line-height:1.65!important}
+
+.resource-page-grid{
+  display:grid!important;
+  width:100%!important;
+  min-width:0!important;
+  grid-template-columns:minmax(0,1fr) minmax(230px,270px)!important;
+  gap:24px!important;
+  align-items:start!important;
+  margin:0!important;
+  padding:16px clamp(22px,3vw,38px) 0!important;
+  box-sizing:border-box!important;
+}
+.resource-main{width:100%!important;min-width:0!important;overflow:hidden!important}
+
+/* The component intentionally contains a text column and decorative art.
+   Keep that structure, but make it follow the same statement proportions as Studio. */
+.resource-statement{
+  position:relative!important;
+  isolation:isolate!important;
+  display:grid!important;
+  width:100%!important;
+  min-width:0!important;
+  min-height:240px!important;
+  height:auto!important;
+  grid-template-columns:minmax(0,1fr) minmax(180px,280px)!important;
+  margin:0 0 28px!important;
+  padding:0!important;
+  overflow:hidden!important;
+  border:0!important;
+  border-radius:20px!important;
+  background:linear-gradient(100deg,#203d34 0%,var(--liv-forest) 48%,#68785f 100%)!important;
+  color:var(--liv-cream)!important;
+  box-shadow:none!important;
+}
+.resource-statement::before{
+  content:''!important;
+  position:absolute!important;
+  inset:0!important;
+  z-index:-1!important;
+  background:linear-gradient(110deg,transparent 52%,rgba(189,174,154,.14))!important;
+  pointer-events:none!important;
+}
+.resource-statement::after{
+  content:''!important;
+  position:absolute!important;
+  right:-18px!important;
+  bottom:-72px!important;
+  z-index:-1!important;
+  width:230px!important;
+  height:230px!important;
+  background:url('/liv-leaf.svg') center/contain no-repeat!important;
+  opacity:.18!important;
+  pointer-events:none!important;
+}
+.resource-statement>div:first-child{
+  display:flex!important;
+  min-width:0!important;
+  padding:30px clamp(28px,3vw,42px)!important;
+  flex-direction:column!important;
+  align-items:flex-start!important;
+  justify-content:center!important;
+  align-self:stretch!important;
+  text-align:left!important;
+}
+.resource-statement>div:first-child p{
+  margin:0!important;
+  color:#78aabd!important;
+  font:600 10px/1.4 Inter,sans-serif!important;
+  letter-spacing:.15em!important;
+  text-transform:uppercase!important;
+}
+.resource-statement>div:first-child h2{
+  max-width:780px!important;
+  margin:8px 0 14px!important;
+  color:var(--liv-cream)!important;
+  font:500 clamp(40px,4.5vw,58px)/.98 'Cormorant Garamond',Georgia,serif!important;
+  letter-spacing:-.025em!important;
+  text-align:left!important;
+}
+.resource-statement>div:first-child span{
+  display:block!important;
+  max-width:720px!important;
+  color:rgba(247,245,240,.78)!important;
+  font:400 14px/1.65 Inter,sans-serif!important;
+  text-align:left!important;
+}
+.resource-hero-art{
+  position:relative!important;
+  z-index:1!important;
+  display:flex!important;
+  min-width:0!important;
+  padding:28px!important;
+  align-items:flex-end!important;
+  justify-content:center!important;
+  color:rgba(247,245,240,.24)!important;
+}
+.resource-hero-art::before{border-color:rgba(247,245,240,.16)!important}
+
+.resource-categories{
+  width:100%!important;
+  min-width:0!important;
+  padding:0 0 2px!important;
+  border-bottom:1px solid rgba(189,174,154,.35)!important;
+  background:transparent!important;
+}
+.resource-categories button{
+  min-height:44px!important;
+  border-radius:12px 12px 0 0!important;
+}
+.resource-categories button.active{
+  border-bottom-color:var(--liv-forest)!important;
+  background:linear-gradient(180deg,rgba(166,181,154,.22),rgba(255,253,249,.72))!important;
+}
+
+.resource-toolbar{
+  width:100%!important;
+  min-width:0!important;
+  grid-template-columns:minmax(180px,1fr) minmax(125px,150px) minmax(135px,165px) auto!important;
+  padding:16px 0!important;
+  box-sizing:border-box!important;
+  border-bottom:1px solid rgba(189,174,154,.35)!important;
+}
+.resource-toolbar label,.resource-toolbar select,.resource-view-toggle{
+  min-width:0!important;
+  border-color:rgba(189,174,154,.42)!important;
+  border-radius:12px!important;
+  background:rgba(255,253,249,.88)!important;
+}
+.resource-view-toggle{overflow:hidden!important}
+
+.resource-card-list{padding-top:16px!important}
+.resource-card-list>article{
+  overflow:hidden!important;
+  border-color:rgba(189,174,154,.38)!important;
+  border-radius:18px!important;
+  background:linear-gradient(145deg,rgba(255,253,249,.94),rgba(241,235,227,.7))!important;
+  box-shadow:0 10px 32px rgba(70,60,48,.055)!important;
+}
+.resource-icon{border-color:rgba(189,174,154,.3)!important;background:rgba(166,181,154,.1)!important;color:var(--liv-forest)!important}
+.resource-card-body h3{font-family:'Cormorant Garamond',Georgia,serif!important;font-size:26px!important;font-weight:600!important}
+.resource-card-body blockquote{border-left-color:var(--liv-sage)!important;background:rgba(166,181,154,.14)!important}
+.resource-card-body blockquote b{color:var(--liv-forest)!important}
+
+.resource-aside{
+  position:sticky!important;
+  top:18px!important;
+  display:grid!important;
+  width:100%!important;
+  min-width:0!important;
+  gap:16px!important;
+}
+.resource-aside section{
+  width:100%!important;
+  min-width:0!important;
+  padding:24px 22px!important;
+  box-sizing:border-box!important;
+  overflow:hidden!important;
+  border:1px solid rgba(189,174,154,.38)!important;
+  border-radius:18px!important;
+  background:linear-gradient(145deg,rgba(255,253,249,.94),rgba(241,235,227,.72))!important;
+  box-shadow:0 10px 30px rgba(70,60,48,.05)!important;
+}
+.resource-aside section:nth-child(2){background:linear-gradient(145deg,var(--liv-sage-wash),rgba(255,253,249,.9))!important}
+
+.resource-confirmation{
+  margin:16px clamp(22px,3vw,38px) 0!important;
+  border:1px solid rgba(166,181,154,.55)!important;
+  border-radius:14px!important;
+  background:var(--liv-sage-wash)!important;
+  color:var(--liv-forest)!important;
+}
+
+@media(max-width:1120px){
+  .resource-page-grid{grid-template-columns:minmax(0,1fr)!important}
+  .resource-aside{position:static!important;grid-template-columns:repeat(2,minmax(0,1fr))!important}
+}
+@media(max-width:760px){
+  .resource-head{align-items:flex-start!important;padding:16px 18px 22px!important}
+  .resource-page-grid{padding:12px 18px 0!important}
+  .resource-statement{min-height:220px!important;grid-template-columns:minmax(0,1fr)!important;border-radius:18px!important}
+  .resource-statement>div:first-child{padding:24px 22px!important}
+  .resource-hero-art{display:none!important}
+  .resource-toolbar{grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important}
+  .resource-toolbar label{grid-column:1/-1!important}
+  .resource-view-toggle{justify-self:end!important}
+  .resource-aside{grid-template-columns:minmax(0,1fr)!important}
+  .resource-card-list>article{grid-template-columns:42px minmax(0,1fr)!important}
+  .resource-card-body{padding:18px!important}
+}
