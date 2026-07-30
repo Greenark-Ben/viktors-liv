@@ -17,5 +17,7 @@
     <div id="root"></div>
     <script type="module" src="/src/unified-app.tsx"></script>
     <script type="module" src="/src/resource-studio-enhancer.tsx"></script>
+    <!-- Deliberately last: feature modules import their own CSS during module evaluation. -->
+    <link rel="stylesheet" href="/src/liv-brand-final.css" />
   </body>
 </html>
