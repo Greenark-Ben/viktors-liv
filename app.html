@@ -10,14 +10,12 @@
     <link rel="apple-touch-icon" href="/liv-mark.svg" />
     <link rel="manifest" href="/site.webmanifest" />
     <link rel="stylesheet" href="/src/viktor-controls.css" />
-    <link rel="stylesheet" href="/src/liv-brand-system.css" />
     <title>Öppna LIV</title>
   </head>
   <body>
     <div id="root"></div>
     <script type="module" src="/src/unified-app.tsx"></script>
     <script type="module" src="/src/resource-studio-enhancer.tsx"></script>
-    <!-- Deliberately last: feature modules import their own CSS during module evaluation. -->
-    <link rel="stylesheet" href="/src/liv-brand-final.css" />
+    <script type="module" src="/src/liv-brand-runtime.ts"></script>
   </body>
 </html>
