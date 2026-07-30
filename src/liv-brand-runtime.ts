@@ -1,5 +1,6 @@
 import './liv-brand-system.css';
 import './liv-brand-final.css';
+import './viktor-brand-final.css';
 
 /**
  * LIV and Studio are two experiences inside the same React application.

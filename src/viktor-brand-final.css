@@ -1,0 +1,178 @@
+/* Viktor profile is shared by LIV and Studio but uses its own legacy class family.
+   This final layer maps that component to the canonical LIV design language. */
+.viktor-page{
+  max-width:none!important;
+  min-height:100vh!important;
+  padding:0 0 96px!important;
+  background:transparent!important;
+  color:var(--liv-charcoal)!important;
+}
+
+.viktor-header{
+  margin:0!important;
+  padding:18px clamp(18px,3vw,34px) 24px!important;
+  border:0!important;
+  border-bottom:1px solid rgba(189,174,154,.35)!important;
+  background:rgba(247,245,240,.76)!important;
+  box-shadow:none!important;
+  backdrop-filter:blur(18px);
+}
+.viktor-header p{
+  margin:0!important;
+  color:#4f8ea1!important;
+  font:600 10px/1.4 Inter,sans-serif!important;
+  letter-spacing:.16em!important;
+  text-transform:uppercase!important;
+}
+.viktor-header h1{
+  margin:.12em 0!important;
+  color:var(--liv-charcoal)!important;
+  font:500 clamp(42px,5vw,64px)/.98 'Cormorant Garamond',Georgia,serif!important;
+  letter-spacing:-.025em!important;
+}
+.viktor-header span{
+  color:var(--muted)!important;
+  font:400 14px/1.65 Inter,sans-serif!important;
+}
+.viktor-header>strong{
+  padding:10px 14px!important;
+  border:1px solid rgba(189,174,154,.38)!important;
+  border-radius:999px!important;
+  background:rgba(255,253,249,.66)!important;
+  color:var(--liv-forest)!important;
+  font:600 10px/1 Inter,sans-serif!important;
+  letter-spacing:.06em!important;
+}
+
+.viktor-hero{
+  position:relative!important;
+  isolation:isolate;
+  min-height:240px!important;
+  margin:16px clamp(18px,3vw,34px) 28px!important;
+  padding:28px 30px!important;
+  gap:28px!important;
+  overflow:hidden!important;
+  border:0!important;
+  border-radius:20px!important;
+  background:linear-gradient(100deg,#203d34 0%,var(--liv-forest) 48%,#68785f 100%)!important;
+  color:var(--liv-cream)!important;
+  box-shadow:none!important;
+}
+.viktor-hero::before{
+  content:'';
+  position:absolute;
+  inset:0;
+  z-index:-1;
+  background:linear-gradient(110deg,transparent 52%,rgba(189,174,154,.14));
+  pointer-events:none;
+}
+.viktor-hero::after{
+  content:'';
+  position:absolute;
+  right:-18px;
+  bottom:-72px;
+  z-index:-1;
+  width:230px;
+  height:230px;
+  background:url('/liv-leaf.svg') center/contain no-repeat;
+  opacity:.18;
+  pointer-events:none;
+}
+.viktor-hero img,.viktor-photo-placeholder{
+  width:220px!important;
+  height:220px!important;
+  border:1px solid rgba(247,245,240,.22)!important;
+  border-radius:14px!important;
+  box-shadow:0 16px 34px rgba(18,38,32,.2)!important;
+}
+.viktor-hero p{
+  margin:0!important;
+  color:#78aabd!important;
+  font:600 10px/1.4 Inter,sans-serif!important;
+  letter-spacing:.15em!important;
+  text-transform:uppercase!important;
+}
+.viktor-hero h2{
+  max-width:800px!important;
+  margin:8px 0 14px!important;
+  color:var(--liv-cream)!important;
+  font:500 clamp(40px,5vw,58px)/.98 'Cormorant Garamond',Georgia,serif!important;
+  letter-spacing:-.025em!important;
+}
+.viktor-hero span{
+  max-width:720px!important;
+  color:rgba(247,245,240,.78)!important;
+  font:400 14px/1.65 Inter,sans-serif!important;
+}
+
+.viktor-section{
+  margin-inline:clamp(18px,3vw,34px)!important;
+  padding:34px 0 40px!important;
+  border-bottom:1px solid rgba(189,174,154,.35)!important;
+}
+.viktor-section>header{
+  margin-bottom:22px!important;
+  padding-top:0!important;
+  border:0!important;
+}
+.viktor-section>header>span{
+  color:#4f8ea1!important;
+  font:500 10px/1.4 Inter,sans-serif!important;
+  letter-spacing:.12em!important;
+}
+.viktor-section header p{
+  margin:0!important;
+  color:#4f8ea1!important;
+  font:600 10px/1.4 Inter,sans-serif!important;
+  letter-spacing:.14em!important;
+  text-transform:uppercase!important;
+}
+.viktor-section h2{
+  margin:4px 0 6px!important;
+  color:var(--liv-charcoal)!important;
+  font:500 clamp(30px,3vw,42px)/1.05 'Cormorant Garamond',Georgia,serif!important;
+  letter-spacing:-.02em!important;
+}
+.viktor-section header small{color:var(--muted)!important;line-height:1.6!important}
+
+.viktor-section>textarea,.viktor-grid3 textarea,.photo-upload input,.joy-form input{
+  border-color:rgba(189,174,154,.42)!important;
+  border-radius:14px!important;
+  background:rgba(255,253,249,.82)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.7)!important;
+}
+.viktor-section>textarea:focus,.viktor-grid3 textarea:focus,.photo-upload input:focus,.joy-form input:focus{
+  border-color:var(--liv-sage)!important;
+  background:var(--liv-white)!important;
+}
+.photo-grid article,.photo-empty{
+  border-color:rgba(189,174,154,.38)!important;
+  border-radius:18px!important;
+  overflow:hidden!important;
+  background:linear-gradient(145deg,rgba(255,253,249,.92),rgba(241,235,227,.7))!important;
+  box-shadow:0 10px 32px rgba(70,60,48,.055)!important;
+}
+.photo-grid h3{color:var(--liv-charcoal)!important;font-family:'Cormorant Garamond',Georgia,serif!important;font-size:24px!important}
+.photo-grid article>b{border-radius:999px!important;background:var(--liv-sage-soft)!important;color:var(--liv-forest)!important}
+.viktor-chips button{
+  border-color:rgba(166,181,154,.55)!important;
+  background:rgba(166,181,154,.18)!important;
+  color:var(--liv-forest)!important;
+}
+.photo-picker,.joy-form button{
+  border:0!important;
+  border-radius:999px!important;
+  background:var(--liv-forest)!important;
+  color:var(--liv-cream)!important;
+  box-shadow:0 8px 18px rgba(36,66,55,.16)!important;
+}
+.viktor-grid3 label,.photo-upload label{color:var(--liv-forest)!important}
+
+@media(max-width:900px){
+  .viktor-page{padding-bottom:72px!important}
+  .viktor-header{display:block!important;padding:16px 18px 22px!important}
+  .viktor-header>strong{display:inline-block!important;margin-top:16px!important}
+  .viktor-hero{grid-template-columns:1fr!important;min-height:220px!important;margin:12px 18px 24px!important;padding:24px 22px!important;border-radius:18px!important}
+  .viktor-hero img,.viktor-photo-placeholder{width:100%!important;height:auto!important;aspect-ratio:4/3!important}
+  .viktor-section{margin-inline:18px!important}
+}
