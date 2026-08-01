@@ -5,6 +5,7 @@ import './resource-brand-final.css';
 import './economy-brand-final.css';
 import{startFinancialActivityEnhancer}from'./financial-activity-enhancer';
 import{startFinancialTransactionEnhancer}from'./financial-transaction-enhancer';
+import{startFinancialReconciliationEnhancer}from'./financial-reconciliation-enhancer';
 
 /**
  * LIV and Studio are two experiences inside the same React application.
@@ -26,6 +27,7 @@ function startBrandRuntime(): void {
   synchroniseExperience();
   startFinancialActivityEnhancer();
   startFinancialTransactionEnhancer();
+  startFinancialReconciliationEnhancer();
 
   const root = document.getElementById('root');
   if (!root) return;
