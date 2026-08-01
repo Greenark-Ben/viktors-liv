@@ -4,6 +4,7 @@ import './viktor-brand-final.css';
 import './resource-brand-final.css';
 import './economy-brand-final.css';
 import{startFinancialActivityEnhancer}from'./financial-activity-enhancer';
+import{startFinancialTransactionEnhancer}from'./financial-transaction-enhancer';
 
 /**
  * LIV and Studio are two experiences inside the same React application.
@@ -24,6 +25,7 @@ function synchroniseExperience(): void {
 function startBrandRuntime(): void {
   synchroniseExperience();
   startFinancialActivityEnhancer();
+  startFinancialTransactionEnhancer();
 
   const root = document.getElementById('root');
   if (!root) return;
