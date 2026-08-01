@@ -1,0 +1,11 @@
+import type{FinancialActivityRecord,FinancialReportingPeriod}from'./contracts';
+import{assertFinancialActivity,assertFinancialReportingPeriod}from'./invariants';
+
+export const FINANCIAL_ACTIVITY_STORAGE_KEY='liv.financial-activity-authority.v1';
+export const FINANCIAL_REPORTING_PERIOD_STORAGE_KEY='liv.financial-reporting-periods.v1';
+export const FINANCIAL_ACTIVITY_CHANGE_EVENT='liv:financial-activities-changed';
+
+export interface FinancialRepository<T>{list():T[];get(id:string):T|undefined;save(record:T&{id:string}):void}
+function read<T>(storage:Storage,key:string):T[]{try{const value=JSON.parse(storage.getItem(key)||'[]');return Array.isArray(value)?value as T[]:[]}catch{return[]}}
+export function createLocalFinancialActivityRepository(storage:Storage=localStorage):FinancialRepository<FinancialActivityRecord>{return{list:()=>read<FinancialActivityRecord>(storage,FINANCIAL_ACTIVITY_STORAGE_KEY),get:id=>read<FinancialActivityRecord>(storage,FINANCIAL_ACTIVITY_STORAGE_KEY).find(record=>record.id===id),save:record=>{assertFinancialActivity(record);const current=read<FinancialActivityRecord>(storage,FINANCIAL_ACTIVITY_STORAGE_KEY);storage.setItem(FINANCIAL_ACTIVITY_STORAGE_KEY,JSON.stringify(current.some(item=>item.id===record.id)?current.map(item=>item.id===record.id?record:item):[record,...current]));if(typeof window!=='undefined')window.dispatchEvent(new CustomEvent(FINANCIAL_ACTIVITY_CHANGE_EVENT,{detail:{activityId:record.id}}))}}}
+export function createLocalFinancialReportingPeriodRepository(storage:Storage=localStorage):FinancialRepository<FinancialReportingPeriod>{return{list:()=>read<FinancialReportingPeriod>(storage,FINANCIAL_REPORTING_PERIOD_STORAGE_KEY),get:id=>read<FinancialReportingPeriod>(storage,FINANCIAL_REPORTING_PERIOD_STORAGE_KEY).find(record=>record.id===id),save:record=>{assertFinancialReportingPeriod(record);const current=read<FinancialReportingPeriod>(storage,FINANCIAL_REPORTING_PERIOD_STORAGE_KEY);storage.setItem(FINANCIAL_REPORTING_PERIOD_STORAGE_KEY,JSON.stringify(current.some(item=>item.id===record.id)?current.map(item=>item.id===record.id?record:item):[record,...current]));if(typeof window!=='undefined')window.dispatchEvent(new CustomEvent(FINANCIAL_ACTIVITY_CHANGE_EVENT,{detail:{reportingPeriodId:record.id}}))}}}
