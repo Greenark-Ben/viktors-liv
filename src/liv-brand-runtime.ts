@@ -6,6 +6,7 @@ import './economy-brand-final.css';
 import{startFinancialActivityEnhancer}from'./financial-activity-enhancer';
 import{startFinancialTransactionEnhancer}from'./financial-transaction-enhancer';
 import{startFinancialReconciliationEnhancer}from'./financial-reconciliation-enhancer';
+import{startReceiptBulkImportEnhancer}from'./receipt-bulk-import-enhancer';
 
 /**
  * LIV and Studio are two experiences inside the same React application.
@@ -28,6 +29,7 @@ function startBrandRuntime(): void {
   startFinancialActivityEnhancer();
   startFinancialTransactionEnhancer();
   startFinancialReconciliationEnhancer();
+  startReceiptBulkImportEnhancer();
 
   const root = document.getElementById('root');
   if (!root) return;
