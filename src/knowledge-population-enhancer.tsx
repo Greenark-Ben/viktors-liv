@@ -1,0 +1,4 @@
+import React from'react';import{createRoot,type Root}from'react-dom/client';import{KnowledgePopulationStudio}from'./knowledge-population-studio';
+let root:Root|null=null;
+function sync(){const studio=document.querySelector<HTMLElement>('.resource-studio');if(!studio){root?.unmount();root=null;document.getElementById('knowledge-population-host')?.remove();return}let host=studio.querySelector<HTMLElement>('#knowledge-population-host');if(!host){host=document.createElement('div');host.id='knowledge-population-host';const grid=studio.querySelector('.resource-page-grid');grid?studio.insertBefore(host,grid):studio.appendChild(host)}if(!root)root=createRoot(host);root.render(<KnowledgePopulationStudio/>)}
+export function startKnowledgePopulationEnhancer():void{sync();const app=document.getElementById('root');if(app)new MutationObserver(sync).observe(app,{childList:true,subtree:true})}
