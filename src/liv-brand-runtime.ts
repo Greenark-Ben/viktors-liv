@@ -9,6 +9,7 @@ import{startFinancialReconciliationEnhancer}from'./financial-reconciliation-enha
 import{startReceiptBulkImportEnhancer}from'./receipt-bulk-import-enhancer';
 import{startFinancialSpendOverviewEnhancer}from'./financial-spend-overview-enhancer';
 import{startFinancialCategoryOptionsEnhancer}from'./financial-category-options-enhancer';
+import{startFinancialLiveDashboardEnhancer}from'./financial-live-dashboard-enhancer';
 
 /**
  * LIV and Studio are two experiences inside the same React application.
@@ -28,6 +29,7 @@ function synchroniseExperience(): void {
 
 function startBrandRuntime(): void {
   synchroniseExperience();
+  startFinancialLiveDashboardEnhancer();
   startFinancialSpendOverviewEnhancer();
   startFinancialCategoryOptionsEnhancer();
   startFinancialActivityEnhancer();
