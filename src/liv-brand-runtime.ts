@@ -10,6 +10,8 @@ import{startReceiptBulkImportEnhancer}from'./receipt-bulk-import-enhancer';
 import{startFinancialSpendOverviewEnhancer}from'./financial-spend-overview-enhancer';
 import{startFinancialCategoryOptionsEnhancer}from'./financial-category-options-enhancer';
 import{startFinancialLiveDashboardEnhancer}from'./financial-live-dashboard-enhancer';
+import{startEconomyWorkspaceNavigation}from'./economy-workspace-navigation';
+import{startReceiptListNavigation}from'./receipt-list-navigation';
 
 /**
  * LIV and Studio are two experiences inside the same React application.
@@ -36,6 +38,8 @@ function startBrandRuntime(): void {
   startFinancialTransactionEnhancer();
   startFinancialReconciliationEnhancer();
   startReceiptBulkImportEnhancer();
+  startEconomyWorkspaceNavigation();
+  startReceiptListNavigation();
 
   const root = document.getElementById('root');
   if (!root) return;
