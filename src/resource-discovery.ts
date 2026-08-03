@@ -13,7 +13,7 @@ export const resourceDiscoveryProviders:ResourceDiscoveryProvider[]=[
  {id:'canonical-url',types:['book','website','pdf','legislation','government_guidance','organisation','video','podcast','research','checklist','template','family_guide','external_link'],resolve:resource=>{const href=normaliseUrl(resource.locator.url)||normaliseUrl(resource.locator.fileRef);return href?{id:'canonical-url',label:resource.type==='pdf'?'Öppna PDF':resource.type==='government_guidance'?'Öppna officiell källa':resource.type==='website'||resource.type==='external_link'?'Besök webbplats':'Öppna resurs',href,kind:'source',external:true}:null}},
  {id:'adlibris',types:['book'],resolve:resource=>{const value=isbn(resource);return value?{id:'adlibris',label:'Sök hos Adlibris',href:query('https://www.adlibris.com/se/sok?q=',value),kind:'retailer',external:true}:null}},
  {id:'bokus',types:['book'],resolve:resource=>{const value=isbn(resource);return value?{id:'bokus',label:'Sök hos Bokus',href:query('https://www.bokus.com/cgi-bin/product_search.cgi?search_word=',value),kind:'retailer',external:true}:null}},
- {id:'libris',types:['book'],resolve:resource=>{const value=isbn(resource);return value?{id:'libris',label:'Sök på Libris',href:query('https://libris.kb.se/search?q=',value),kind:'library',external:true}:null}},
+ {id:'libris',types:['book'],resolve:resource=>{const value=isbn(resource);return value?{id:'libris',label:'Sök på Libris',href:query('https://libris.kb.se/hitlist?q=linkisxn:',value),kind:'library',external:true}:null}},
  {id:'google-books',types:['book'],resolve:resource=>{const value=isbn(resource);return value?{id:'google-books',label:'Visa i Google Books',href:query('https://books.google.com/books?vid=ISBN',value),kind:'reference',external:true}:null}},
 ];
 
