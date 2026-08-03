@@ -12,6 +12,7 @@ import{startFinancialCategoryOptionsEnhancer}from'./financial-category-options-e
 import{startFinancialLiveDashboardEnhancer}from'./financial-live-dashboard-enhancer';
 import{startEconomyWorkspaceNavigation}from'./economy-workspace-navigation';
 import{startReceiptListNavigation}from'./receipt-list-navigation';
+import{startKnowledgePopulationEnhancer}from'./knowledge-population-enhancer';
 
 /**
  * LIV and Studio are two experiences inside the same React application.
@@ -31,6 +32,7 @@ function synchroniseExperience(): void {
 
 function startBrandRuntime(): void {
   synchroniseExperience();
+  startKnowledgePopulationEnhancer();
   startFinancialLiveDashboardEnhancer();
   startFinancialSpendOverviewEnhancer();
   startFinancialCategoryOptionsEnhancer();
